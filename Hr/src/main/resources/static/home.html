@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- AJAX == axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <!--  -->
+        <div class="jumbotron py-4">
+            <h1 class="display-3">HR</h1>
+            <p class="lead"><button class="btn">
+                    <span class="badge badge-primary">标准2.0</span>
+                </button></p>
+        </div>
+
+        <!-- 数据 -->
+        <div class="container-fluid">
+            <!--  -->
+            <div class="row">
+                <div class="col-lg-4">
+                    <!-- 表单 -->
+                    <!-- 卡片 -->
+                    <div class="card bg-warning mb-3">
+                        <div class="card-body">
+                            <!-- 文本框 -->
+                            <div class="form-group">
+                                <label for="">姓名</label>
+                                <input type="text" v-model="name" class="form-control" name="" id=""
+                                    placeholder="请输入用户名">
+                            </div>
+                            <!-- 单选 -->
+                            <div class="form-group">
+                                <label for="">性别</label>
+                                <!-- 单选分组 -->
+                                <div class="form-control">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" checked v-model="gender" type="radio"
+                                                name="sex" id="" value="男">男
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" v-model="gender" type="radio" name="sex"
+                                                id="" value="女">女
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 下拉列表 -->
+                            <div class="form-group">
+                                <label for="">职位</label>
+                                <select class="form-control" v-model="job">
+                                    <option v-for="(j, i) in jobs" v-bind:value="j">{{j}}</option>
+                                </select>
+                            </div>
+
+                            <input name="" id="" @click="create()" class="btn btn-primary btn-block" type="button"
+                                value="新建">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-8">
+                    <!-- 表格 -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 8%">
+                                    <input type="checkbox" name="" id="" value="checkedValue">
+                                </th>
+                                <th scope="col" style="width: 18%">编号</th>
+                                <th scope="col" style="width: 18%">姓名</th>
+                                <th scope="col" style="width: 18%">性别</th>
+                                <th scope="col" style="width: 18%">职位</th>
+                                <th scope="col" style="width: 20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="s in staffs">
+                                <td>
+                                    <input type="checkbox" name="" id="" value="checkedValue">
+                                </td>
+                                <td>{{s.id}}</td>
+                                <td>{{s.name}}</td>
+                                <td>{{s.gender}}</td>
+                                <td>{{s.job}}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-sm-12 ">
+                                            <a name="" id="" data-toggle="modal" data-target="#updateModal"
+                                                class="btn btn-primary" @click="edit(s.id)" href="#"
+                                                role="button">编辑</a>
+                                        </div>
+
+                                        <!-- 修改的弹窗 -->
+                                        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="exampleModalLabel" data-backdrop="static"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">修改信息</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="">用户名</label>
+                                                            <input type="text" class="form-control"
+                                                                v-model="staffEdited.name" name="" id=""
+                                                                aria-describedby="helpId" placeholder="用户名">
+                                                        </div>
+                                                        <!-- 单选 -->
+                                                        <div class="form-group">
+                                                            <label for="">性别</label>
+                                                            <select class="form-control" v-model="staffEdited.gender">
+                                                                <option value="男">男</option>
+                                                                <option value="女">女</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="">职位</label>
+                                                            <select class="form-control" v-model="staffEdited.job">
+                                                                <option v-for="(j, i) in jobs" v-bind:value="j">{{j}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">取消</button>
+                                                        <button type="button" @click="update(s.id)"
+                                                            class="btn btn-primary" data-dismiss="modal">保存</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-6 col-sm-12 mt-lg-0 mt-sm-3 ">
+                                            <a name="" id="" @click="remove(s.id)" class="btn btn-danger" href="#"
+                                                role="button">删除</a>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 分页 -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true" >&laquo;</span>
+                                    <span class="sr-only">上一页</span>
+                                </a>
+                            </li>
+
+                            <!-- 页码 -->
+                            <li v-for="i in Math.ceil(count / 5)" v-on:click="page(i)" class="page-item">
+                                <a class="page-link" href="#">{{i}}</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true" >&raquo;</span>
+                                    <span class="sr-only">下一页</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                staffs: [],
+                name: '',
+                gender: '',
+                job: '',
+                jobs: ['研发', '测试', '实施', '产品'],
+                staffEdited: {},
+                count: 0,
+            },
+            methods: {
+                //创建
+                create: function () {
+                    console.log(`name:${this.name},gender:${this.gender},job:${this.job}`);
+                    //发送post请求给服务端
+                    axios.post(`/api/v1/staff`,
+                        {
+                            name: this.name,
+                            gender: this.gender,
+                            job: this.job
+                        })
+                        .then(res => {
+                            console.log(res.data.msg);
+                            axios.get(`/api/v1/staff`)
+                                .then(res => {
+                                    this.staffs = res.data.staffs;
+                                    this.count = res.data.count;
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                })
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                },
+                //删除
+                remove: function (id) {
+                    // 发送 AJAX 异步请求
+                    axios.delete(`/api/v1/staff/${id}`)
+                        .then(res => {
+                            axios.get(`/api/v1/staff`)
+                                .then(res => {
+                                    this.staffs = res.data.staffs;
+                                    this.count = res.data.count;
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                })
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                },
+                //编辑
+                edit: function (id) {
+                    axios.get(`/api/v1/staff/${id}`)
+                        .then(res => {
+                            console.log(res.data);
+                            this.staffEdited = res.data;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+
+                },
+                //修改
+                update: function (id) {
+                    // JS 异步请求
+                    axios.put(`/api/v1/staff/${id}`, this.staffEdited)
+                        .then(res => {
+                            console.log(res.data);
+                            axios.get(`/api/v1/staff`)
+                                .then(res => {
+                                    this.staffs = res.data.staffs;
+                                    this.count = res.data.count;
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                })
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                },
+                //分页
+                page: function (n) {
+                    // GET 
+                    axios.get(
+                        `/api/v1/staff`,
+                        {
+                            params: {
+                                size: 5,
+                                start: (n - 1) * 5,
+                            }
+                        })
+                        .then(res => {
+                            // Vue 数据的双向绑定
+                            this.staffs = res.data.staffs;
+                            this.count = res.data.count;
+                        })
+                },
+            },
+            mounted() {
+                this.job = this.jobs[0];
+                // 初始化
+                axios.get(`/api/v1/staff`)
+                    .then(res => {
+                        this.staffs = res.data.staffs;
+                        this.count = res.data.count;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+            },
+        })
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
